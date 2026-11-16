@@ -9,6 +9,7 @@ import Loading from '@/components/custom/Loading'
 import Canvas from '@/_shared/Canvas'
 import { SettingContext } from '@/context/SettingContext'
 import { RefreshDataContext } from '@/context/RefreshDataContext'
+import { toast } from 'sonner'
 
 const ProjectCanvasPlayground = () => {
   const [projectDetail, setProjectDetail] = useState<ProjectType>()
@@ -58,13 +59,20 @@ const ProjectCanvasPlayground = () => {
 
   const createScreenConfig = async () => {
     setLoading(true)
-    const res = await axios.post('/api/generate-config', {
-      projectId: projectId as string,
-      userInput: projectDetail?.userInput,
-      device: projectDetail?.device,
-    })
-    console.log(res?.data)
-    getProjectDetail()
+    try {
+      const res = await axios.post('/api/generate-config', {
+        projectId: projectId as string,
+        userInput: projectDetail?.userInput,
+        device: projectDetail?.device,
+      })
+      console.log(res?.data)
+      getProjectDetail()
+    } catch (err: any) {
+      console.error("Error creating screen config:", err)
+      toast.error(err?.response?.data?.error || "AI service is busy. Please try again in a moment.")
+      setLoading(false)
+      hasCreatedScreens.current = false
+    }
   }
 
   const GenerateScreenUI = async () => {
@@ -100,12 +108,12 @@ const ProjectCanvasPlayground = () => {
   }
 
   return (
-    <div className='h-screen h-[100dvh] flex flex-col overflow-hidden w-full'>
+    <div className='fixed inset-0 flex flex-col overflow-hidden w-full h-full'>
       <ProjectHeader screenConfig={screenConfig} projectDetail={projectDetail} />
       <div className="flex flex-1 overflow-hidden relative">
         {loading && !projectDetail && <Loading loading={true} message="Loading Project Details..." />}
         <ProjectSettings projectDetail={projectDetail} screenConfig={screenConfig} />
-        <div className="flex-1 transition-all duration-300 overflow-hidden relative">
+        <div className="flex-1 transition-all duration-300 overflow-hidden relative w-full h-full">
           <Canvas
             projectDetail={projectDetail}
             screenConfig={screenConfig}

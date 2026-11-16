@@ -185,7 +185,7 @@ const ProjectHeader = ({ screenConfig = [], projectDetail }: Props) => {
                       variant="outline"
                       size="sm"
                       title="Forma Assistant"
-                      className="flex items-center gap-1.5 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex-shrink-0"
+                      className="hidden min-[340px]:flex items-center gap-1.5 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex-shrink-0"
                       onClick={() => setChatbotOpen(true)}
                     >
                       <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
@@ -198,7 +198,7 @@ const ProjectHeader = ({ screenConfig = [], projectDetail }: Props) => {
                         variant="outline"
                         size="sm"
                         title="Capture Screenshot"
-                        className="flex items-center gap-1.5 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex-shrink-0"
+                        className="hidden min-[400px]:flex items-center gap-1.5 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex-shrink-0"
                         onClick={handleScreenshot}
                         disabled={isCapturing}
                       >

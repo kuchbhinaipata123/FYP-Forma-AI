@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { SettingContext } from '@/context/SettingContext'
 import { THEME_NAME_LIST, THEMES } from '@/data/Theme'
 import { ProjectType, ScreenConfigType } from '@/types/types'
-import { Sparkle, ChevronLeft, ChevronRight, Layout, Palette, PlusCircle, Loader2 } from 'lucide-react'
+import { Sparkle, ChevronLeft, ChevronRight, Layout, Palette, PlusCircle, Loader2, X } from 'lucide-react'
 import React, { useContext, useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import axios from 'axios'
@@ -120,6 +120,9 @@ const ProjectSettings = ({ projectDetail, screenConfig }: Props) => {
 
       setUserInput('');
       setRefreshData({ method: 'screenConfig', date: Date.now() });
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        setIsCollapsed(true);
+      }
     } catch (error) {
       console.error("Sidebar action error:", error);
       toast.error("Action failed. Please try again.", { id: 'sidebar-action' });
@@ -129,18 +132,56 @@ const ProjectSettings = ({ projectDetail, screenConfig }: Props) => {
   };
 
   return (
-    <div className={cn(
-      'transition-all duration-300 ease-in-out border-r border-slate-200 dark:border-slate-800 h-full bg-white dark:bg-slate-900 relative flex flex-col pt-3 flex-shrink-0 z-20',
-      isCollapsed ? 'w-14 sm:w-16 md:w-20' : 'w-[85vw] max-w-[280px] sm:w-[280px] max-md:absolute max-md:inset-y-0 max-md:left-0 max-md:shadow-2xl'
-    )}>
-      {/* Collapse Toggle Button */}
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className='absolute -right-3 top-6 sm:top-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full p-1 shadow-md hover:scale-110 transition-all z-30 cursor-pointer'
-      >
-        {isCollapsed ? <ChevronRight className='w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-600 dark:text-slate-300' /> : <ChevronLeft className='w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-600 dark:text-slate-300' />}
-      </button>
+    <>
+      {/* Mobile Backdrop */}
+      {!isCollapsed && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[45] md:hidden transition-opacity"
+          onClick={() => setIsCollapsed(true)}
+          aria-label="Close settings sidebar"
+        />
+      )}
+
+      {/* Mobile Floating Trigger when collapsed */}
+      {isCollapsed && (
+        <button
+          onClick={() => setIsCollapsed(false)}
+          className="md:hidden fixed left-3 top-20 z-30 flex items-center gap-1.5 px-3 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 shadow-lg rounded-full text-xs font-semibold text-slate-800 dark:text-slate-100 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+        >
+          <Sparkle className="w-3.5 h-3.5 text-primary" />
+          <span>Prompt & Settings</span>
+        </button>
+      )}
+
+      <div className={cn(
+        'transition-all duration-300 ease-in-out border-r border-slate-200 dark:border-slate-800 h-full bg-white dark:bg-slate-900 flex flex-col pt-3',
+        // Desktop docking
+        'md:relative md:flex-shrink-0 md:z-20',
+        isCollapsed ? 'md:w-16 lg:w-20' : 'md:w-[280px] lg:w-[300px]',
+        // Mobile drawer overlay
+        'max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-50 max-md:w-[85vw] max-md:max-w-[320px] max-md:shadow-2xl',
+        isCollapsed ? 'max-md:-translate-x-full' : 'max-md:translate-x-0'
+      )}>
+        {/* Desktop Collapse Toggle Button */}
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className='hidden md:flex absolute -right-3 top-6 sm:top-8 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full p-1 shadow-md hover:scale-110 transition-all z-30 cursor-pointer'
+        >
+          {isCollapsed ? <ChevronRight className='w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-600 dark:text-slate-300' /> : <ChevronLeft className='w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-600 dark:text-slate-300' />}
+        </button>
+
+        {/* Mobile Header with Close X */}
+        <div className="flex md:hidden items-center justify-between px-4 pb-2 border-b border-slate-100 dark:border-slate-800 mb-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Prompt & Settings</span>
+          <button
+            onClick={() => setIsCollapsed(true)}
+            className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
 
       <div className={cn(
         'flex-grow overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pb-4'
@@ -364,6 +405,7 @@ const ProjectSettings = ({ projectDetail, screenConfig }: Props) => {
         }}
       />
     </div>
+    </>
   )
 }
 

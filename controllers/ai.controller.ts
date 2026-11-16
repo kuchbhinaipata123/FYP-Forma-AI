@@ -26,14 +26,31 @@ export async function generateConfig(
   userInput: string,
   device: string
 ): Promise<GeneratedConfig> {
-  const genModel = genAI.getGenerativeModel({
-    model: "gemini-3.5-flash-lite",
-    systemInstruction: UI_GENERATION_PROMPT,
-  });
+  const models = ["gemini-3.5-flash-lite", "gemini-3.5-flash"];
+  let aiResult;
+  let lastError;
 
-  const aiResult = await genModel.generateContent(
-    `Device Type: ${device}\nUser Request: ${userInput}`
-  );
+  for (const model of models) {
+    try {
+      const genModel = genAI.getGenerativeModel({
+        model,
+        systemInstruction: UI_GENERATION_PROMPT,
+      });
+
+      aiResult = await genModel.generateContent(
+        `Device Type: ${device}\nUser Request: ${userInput}`
+      );
+      if (aiResult) break;
+    } catch (err: any) {
+      console.warn(`Model ${model} error:`, err?.message);
+      lastError = lastError ?? err; // keep the first error (e.g. 503) for the user message
+    }
+  }
+
+  if (!aiResult) {
+    throw lastError || new Error("Failed to generate configuration from AI model");
+  }
+
   let rawContent = aiResult.response.text();
   rawContent = rawContent.replace(/```json|```/g, "").trim();
 
@@ -54,7 +71,7 @@ export async function generateConfig(
     // Clear existing screen configs
     await db.delete(ScreenConfigTable).where(eq(ScreenConfigTable.projectId, projectId));
 
-        const screenConfigs = (jsonResult.screens || []).map((screen, index) =>
+    const screenConfigs = (jsonResult.screens || []).map((screen, index) =>
       db.insert(ScreenConfigTable).values({
         projectId,
         screenName: screen.name,
