@@ -142,7 +142,7 @@ const Canvas = ({ projectDetail, screenConfig, loading, generatingScreenId }: Pr
         return (
         <div
           ref={containerRef}
-          className="w-full h-full bg-gray-100 dark:bg-slate-950 overflow-hidden relative"
+          className="w-full h-full bg-gray-100 dark:bg-slate-950 overflow-hidden relative touch-none"
           style={{
             backgroundImage: "radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px)",
             backgroundSize: "30px 30px"
@@ -159,7 +159,11 @@ const Canvas = ({ projectDetail, screenConfig, loading, generatingScreenId }: Pr
             doubleClick={{ disabled: false }}
             panning={{ disabled: !panningEnabled, velocityDisabled: false }}
             velocityAnimation={{ sensitivity: 1, animationTime: 400, equalToMove: true }}
-            onInit={(ref) => setCurrentScale(ref.state.scale)}
+            onInit={(ref) => {
+              setCurrentScale(ref.state.scale);
+              // small screens: frame the first screen instead of the tiny default view
+              if ((containerRef.current?.clientWidth || window.innerWidth) < 500) setTimeout(() => centerScreen(0, ref.setTransform), 50);
+            }}
             onTransformed={(_, state) => setCurrentScale(state.scale)}
           >
             {() => (

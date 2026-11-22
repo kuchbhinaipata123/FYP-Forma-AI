@@ -146,7 +146,7 @@ const ProjectSettings = ({ projectDetail, screenConfig }: Props) => {
       {isCollapsed && (
         <button
           onClick={() => setIsCollapsed(false)}
-          className="md:hidden fixed left-3 top-20 z-30 flex items-center gap-1.5 px-3 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 shadow-lg rounded-full text-xs font-semibold text-slate-800 dark:text-slate-100 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          className="md:hidden fixed right-3 bottom-20 z-30 flex items-center gap-1.5 px-3 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 shadow-lg rounded-full text-xs font-semibold text-slate-800 dark:text-slate-100 hover:scale-105 active:scale-95 transition-all cursor-pointer"
         >
           <Sparkle className="w-3.5 h-3.5 text-primary" />
           <span>Prompt & Settings</span>

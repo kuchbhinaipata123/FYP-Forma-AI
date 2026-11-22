@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -13,6 +13,13 @@ const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
 });
+
+// minimumScale: stops zoom-out from shrinking the page and leaving blank space on mobile
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  minimumScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "Forma",

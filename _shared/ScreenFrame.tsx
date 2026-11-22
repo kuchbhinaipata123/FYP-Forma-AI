@@ -25,6 +25,8 @@ interface Props {
         const themeObj = parseTheme(settingDetails?.theme ?? projectDetail?.theme);
         const iframeRef = useRef<HTMLIFrameElement | null>(null);
         const [size, setSize] = useState({ width, height });
+        // react-rnd scales its initial position by the zoom level at mount; undo that so frames start where intended
+        const mountScale = useRef(scale || 1).current;
 
         useEffect(() => {
             setSize({ width, height });
@@ -106,8 +108,8 @@ interface Props {
         return (
             <Rnd
                 default={{
-                    x,
-                    y,
+                    x: x / mountScale,
+                    y: y / mountScale,
                     width,
                     height
                 }}
@@ -142,7 +144,7 @@ interface Props {
                     />
                     <iframe
                         ref={iframeRef}
-                        className='w-full bg-white h-full rounded-2xl shadow-[0_0_40px_-15px_rgba(0,0,0,0.15)] ring-1 ring-slate-200/60'
+                        className='w-full bg-white h-full pointer-coarse:pointer-events-none rounded-2xl shadow-[0_0_40px_-15px_rgba(0,0,0,0.15)] ring-1 ring-slate-200/60'
                         sandbox='allow-same-origin allow-scripts'
                         srcDoc={htmlCode}
                     />

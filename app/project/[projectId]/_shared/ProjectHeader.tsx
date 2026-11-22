@@ -171,7 +171,7 @@ const ProjectHeader = ({ screenConfig = [], projectDetail }: Props) => {
   return (
     <>
       <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-30 flex-shrink-0">
-            <nav className="w-full px-2 sm:px-6 overflow-x-auto scrollbar-none">
+            <nav className="w-full px-1 sm:px-6 overflow-x-auto scrollbar-none">
               <div className="flex items-center justify-between h-14 sm:h-16 gap-1.5 sm:gap-4 min-w-max sm:min-w-0">
                 {/* Logo on Left */}
                 <div className="flex items-center flex-shrink-0">
