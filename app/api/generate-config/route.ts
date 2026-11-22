@@ -14,9 +14,12 @@ export async function POST(request: NextRequest) {
     );
 
     return NextResponse.json(config);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Generate config error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    const message = error?.message?.includes("503")
+      ? "AI model is experiencing high demand. Please try again in a moment."
+      : "Failed to generate screens. Please try again.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 

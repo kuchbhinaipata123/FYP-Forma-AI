@@ -117,8 +117,8 @@ const PrototypePlayer = ({ screenConfig, projectDetail, onClose }: Props) => {
   return (
     <div className="fixed inset-0 z-[200] bg-black flex flex-col overflow-hidden">
 
-      {/* ── Minimal HUD — always on top, only shows on hover ── */}
-      <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-5 py-3 bg-gradient-to-b from-black/70 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-200 group">
+      {/* ── Minimal HUD — always on top, shows on hover on desktop, always visible on mobile/touch ── */}
+      <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-3 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-b from-black/80 via-black/50 to-transparent opacity-90 sm:opacity-0 sm:hover:opacity-100 transition-opacity duration-200 group">
         {/* Left: Back + Restart */}
         <div className="flex items-center gap-3">
           <button
@@ -139,25 +139,25 @@ const PrototypePlayer = ({ screenConfig, projectDetail, onClose }: Props) => {
         </div>
 
         {/* Center: screen name */}
-        <span className="text-white/70 text-sm font-medium tracking-tight select-none">
-          {activeScreen?.screenName}
-          {navHistory.length > 1 && (
-            <span className="ml-2 text-[10px] text-white/30 bg-white/10 px-2 py-0.5 rounded-full">
-              {navHistory.length} steps
-            </span>
-          )}
-        </span>
+          <span className="text-white/70 text-xs sm:text-sm font-medium tracking-tight select-none truncate max-w-[120px] sm:max-w-[220px] md:max-w-none">
+            {activeScreen?.screenName}
+            {navHistory.length > 1 && (
+              <span className="ml-2 text-[10px] text-white/30 bg-white/10 px-2 py-0.5 rounded-full">
+                {navHistory.length} steps
+              </span>
+            )}
+          </span>
 
-        {/* Right: Close + hint */}
-        <div className="flex items-center gap-3">
-          <span className="text-[11px] text-white/30 hidden sm:block">Press Esc to exit</span>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+          {/* Right: Close + hint */}
+          <div className="flex items-center gap-3">
+            <span className="text-[11px] text-white/30 hidden sm:block">Press Esc to exit</span>
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
       </div>
 
       {/* ── The Screen itself — takes full area ── */}
